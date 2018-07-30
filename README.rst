@@ -20,8 +20,8 @@ Function ``forecast`` handles all request parameters and returns a
 
 .. code:: python
 
-    >>> from darksky import forecast
-    >>> boston = forecast(key, 42.3601, -71.0589)
+    >>> from darksky.forecast import Forecast
+    >>> boston = Forecast(key, 42.3601, -71.0589)
     >>>
 
 The first 3 positional arguments are identical to the 3 required
@@ -36,7 +36,7 @@ Using ``timeout`` argument will set default `request timeout <http://docs.python
     >>> BOSTON = key, 42.3601, -71.0589
     >>> from datetime import datetime as dt
     >>> t = dt(2013, 5, 6, 12).isoformat()
-    >>> boston = forecast(*BOSTON, time=t)
+    >>> boston = Forecast(*BOSTON, time=t)
     >>> boston.time
     1367866800
 
@@ -148,13 +148,13 @@ Example script
 
 .. code:: python
 
-    from darksky import forecast
+    from darksky.forecast import Forecast
     from datetime import date, timedelta
 
     BOSTON = 42.3601, 71.0589
 
     weekday = date.today()
-    with forecast('API_KEY', *BOSTON) as boston:
+    with Forecast('API_KEY', *BOSTON) as boston:
         print(boston.daily.summary, end='\n---\n')
         for day in boston.daily:
             day = dict(day = date.strftime(weekday, '%a'),
