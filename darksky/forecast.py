@@ -37,7 +37,7 @@ class Forecast(DataPoint):
     @property
     def url(self):
         time = self._parameters['time']
-        timestr = ',{}'.format(time) if time else ''
+        timestr = ',{}'.format(time.strftime('%Y-%m-%dT%H:%M:%S')) if time else ''
         uri_format = '{url}/{key}/{latitude},{longitude}{timestr}'
         return uri_format.format(url=_API_URL, timestr=timestr, **self._parameters)
 
