@@ -1,9 +1,9 @@
 # forecast.py
 from __future__ import print_function
-from builtins import super
 
 import json
-import sys
+from builtins import super
+
 import requests
 
 from .data import DataPoint
@@ -12,8 +12,14 @@ _API_URL = 'https://api.darksky.net/forecast'
 
 
 class Forecast(DataPoint):
+
     def __init__(self, key, latitude, longitude, time=None, timeout=None, **queries):
-        self._parameters = dict(key=key, latitude=latitude, longitude=longitude, time=time)
+        super(Forecast, self).__init__({})
+        self._queries = None
+        self.timeout = None
+        self.response_headers = None
+        self._parameters = dict(key=key, latitude=latitude, longitude=longitude,
+                                time=time)
         self.refresh(timeout, **queries)
 
     def __setattr__(self, key, value):
@@ -31,7 +37,7 @@ class Forecast(DataPoint):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, tb):
+    def __exit__(self, exit_type, value, tb):
         del self
 
     @property
@@ -52,6 +58,5 @@ class Forecast(DataPoint):
 
         response = requests.get(self.url, **request_params)
         self.response_headers = response.headers
-        if response.status_code is not 200:
-            raise requests.exceptions.HTTPError('Bad response')
+        response.raise_for_status()
         return super().__init__(json.loads(response.text))
